@@ -154,3 +154,29 @@
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
+.furniture-item {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(139, 69, 19, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
+}
+
+#furniture-control-panel {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: rgba(58, 68, 84, 0.95);
+    border-radius: 15px;
+    padding: 15px;
+    width: 200px;
+    z-index: 10000;
+}
+
+.color-btn.active {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 3px #fff;
+}
