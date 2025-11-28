@@ -207,9 +207,14 @@
   }
 
   function showSceneList() {
+   // إصلاح الخطأ - التحقق من وجود العناصر أولاً
+if (sceneListElement && sceneListToggleElement) {
     sceneListElement.classList.add('enabled');
     sceneListToggleElement.classList.add('enabled');
-  }
+} else {
+    console.log('ℹ️ عناصر قائمة المشاهد غير موجودة - قد يكون هذا طبيعياً');
+}
+  
 
   function hideSceneList() {
     sceneListElement.classList.remove('enabled');
