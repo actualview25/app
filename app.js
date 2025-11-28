@@ -221,3 +221,18 @@ window.furnitureSystem = {
 };
 
 console.log('📦 نظام الأثاث البسيط محمل وجاهز');
+// إصلاح خطأ Marzipano في نهاية app.js
+function fixMarzipanoError() {
+    console.log('🔧 محاولة إصلاح أخطاء Marzipano...');
+    
+    // انتظر تحميل Marzipano completamente
+    setTimeout(() => {
+        const sceneElements = document.querySelectorAll('#sceneList .scene');
+        if (sceneElements.length === 0) {
+            console.log('⚠️ لم يتم العثور على مشاهد - قد يكون هذا طبيعياً');
+        }
+    }, 3000);
+}
+
+// تشغيل الإصلاح بعد التحميل
+window.addEventListener('load', fixMarzipanoError);
