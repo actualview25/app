@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام الأثاث المتقدم - الجولة الافتراضية</title>
+    <title>الجولة الافتراضية - نظام الأثاث</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="single-scene view-control-buttons">
+<body>
 
-<!-- ... عناصر Marzipano الأصلية ... -->
+<!-- محتوى Marzipano الأصلي -->
+<div id="pano"></div>
 
-<!-- لوحة تحكم الأثاث -->
+<!-- لوحة تحكم الأثاث البسيطة -->
 <div id="furniture-control-panel">
     <div class="control-header">
-        <h3>🎨 نظام الأثاث الذكي</h3>
+        <h3>🎨 ألوان الأثاث</h3>
     </div>
     <div class="color-palette">
-        <button class="color-btn" data-color="default" style="background: #8B4513" title="بني خشبي">🪑</button>
+        <button class="color-btn active" data-color="default" style="background: #8B4513" title="بني خشبي">🪑</button>
         <button class="color-btn" data-color="brown" style="background: #A0522D" title="بني"></button>
         <button class="color-btn" data-color="dark-brown" style="background: #654321" title="بني غامق"></button>
         <button class="color-btn" data-color="black" style="background: #2F4F4F" title="أسود"></button>
@@ -29,24 +30,16 @@
     <div class="control-actions">
         <button id="reset-colors" class="action-btn">🔄 إعادة تعيين</button>
         <button id="toggle-panel" class="action-btn">📋 إخفاء</button>
-        <button id="system-info" class="action-btn">ℹ️ معلومات النظام</button>
     </div>
 </div>
 
-<!-- scripts -->
+<!-- الملفات الأساسية فقط -->
 <script src="vendor/screenfull.min.js"></script>
 <script src="vendor/bowser.min.js"></script>
 <script src="vendor/marzipano.js"></script>
-
 <script src="data.js"></script>
 <script src="index.js"></script>
-
-<!-- الأنظمة الجديدة -->
-<script src="memory-manager.js"></script>
-<script src="preference-manager.js"></script>
-<script src="analytics-manager.js"></script>
-<script src="app.js"></script>
-<script src="main.js"></script>
+<script src="app.js"></script> <!-- الملف الجديد -->
 
 </body>
 </html>
