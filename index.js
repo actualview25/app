@@ -216,16 +216,19 @@ if (sceneListElement && sceneListToggleElement) {
 }
   
 
-  function hideSceneList() {
-    sceneListElement.classList.remove('enabled');
-    sceneListToggleElement.classList.remove('enabled');
-  }
+ function showSceneList() {
+    if (sceneListElement && sceneListToggleElement) {
+        sceneListElement.classList.add('enabled');
+        sceneListToggleElement.classList.add('enabled');
+    }
+}
 
-  function toggleSceneList() {
-    sceneListElement.classList.toggle('enabled');
-    sceneListToggleElement.classList.toggle('enabled');
-  }
-
+function hideSceneList() {
+    if (sceneListElement && sceneListToggleElement) {
+        sceneListElement.classList.remove('enabled');
+        sceneListToggleElement.classList.remove('enabled');
+    }
+}
   function startAutorotate() {
     if (!autorotateToggleElement.classList.contains('enabled')) {
       return;
