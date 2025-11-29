@@ -1,80 +1,77 @@
 console.log('🚀 بدء تحميل Marzipano...');
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 الصفحة محملة - بدء تهيئة الجولة');
-    
-    // الانتظار حتى تحميل المكتبات
-    if (typeof window.Marzipano === 'undefined') {
-        console.error('❌ Marzipano غير محمل');
-        return;
-    }
-
-    if (typeof window.APP_DATA === 'undefined') {
-        console.error('❌ APP_DATA غير محمل');
-        return;
-    }
-
-    console.log('✅ المكتبات محملة - بدء التهيئة');
-    initViewer();
+// انتظر حتى تحميل كل شيء
+window.addEventListener('load', function() {
+    console.log('📄 الصفحة محملة بالكامل');
+    initializeMarzipano();
 });
 
-function initViewer() {
+function initializeMarzipano() {
     try {
-        console.log('🎯 بدء إنشاء المشاهد...');
+        console.log('🎯 بدء تهيئة Marzipano...');
         
+        // التحقق من المكتبات
+        if (typeof Marzipano === 'undefined') {
+            console.error('❌ Marzipano غير محمل');
+            return;
+        }
+        
+        if (typeof APP_DATA === 'undefined') {
+            console.error('❌ APP_DATA غير محمل');
+            return;
+        }
+
+        // العنصر الرئيسي
         var panoElement = document.getElementById('pano');
         if (!panoElement) {
             console.error('❌ عنصر pano غير موجود');
             return;
         }
 
-        // 1. إنشاء Viewer أولاً
+        console.log('✅ كل المتطلبات جاهزة');
+
+        // 1. إنشاء Viewer
         var viewer = new Marzipano.Viewer(panoElement);
         console.log('✅ Viewer تم إنشاؤه');
 
-        // 2. الحصول على بيانات المشهد الأول
-        var sceneData = window.APP_DATA.scenes[0];
+        // 2. بيانات المشهد الأول
+        var sceneData = APP_DATA.scenes[0];
         if (!sceneData) {
-            console.error('❌ لا توجد بيانات للمشهد');
+            console.error('❌ لا توجد مشاهد');
             return;
         }
 
-        console.log('🖼️ تحميل المشهد:', sceneData.id);
+        console.log('🖼️ تحميل المشهد:', sceneData.name);
 
-        // 3. إنشاء مصدر الصور - إصلاح السطر الذي به المشكلة
+        // 3. مصدر الصور - بطريقة أبسط
         var source = Marzipano.ImageUrlSource.fromString(
             "tiles/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg"
         );
 
-        // 4. إنشاء الهندسة
+        // 4. الهندسة
         var geometry = new Marzipano.CubeGeometry(sceneData.levels);
 
-        // 5. إنشاء المنظور
-        var limiter = Marzipano.RectilinearView.limit.traditional(
-            sceneData.faceSize, 
-            100 * Math.PI / 180, 
-            120 * Math.PI / 180
-        );
-        var view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
+        // 5. المنظور - بدون limiter معقد
+        var view = new Marzipano.RectilinearView(sceneData.initialViewParameters);
 
         // 6. إنشاء المشهد
         var scene = viewer.createScene({
             source: source,
             geometry: geometry,
-            view: view,
-            pinFirstLevel: true
+            view: view
         });
 
         // 7. تحميل المشهد
         scene.switchTo();
         console.log('✅ المشهد محمل بنجاح!');
 
-        // 8. جعل viewer متاحاً globally لنظام الأثاث
+        // 8. جعل viewer متاحاً لنظام الأثاث
         window.viewer = viewer;
         console.log('🌐 Viewer جاهز لنظام الأثاث');
 
     } catch (error) {
-        console.error('💥 خطأ في التهيئة:', error);
-        console.error('🔧 تفاصيل الخطأ:', error.message);
+        console.error('💥 خطأ فادح:', error);
+        console.error('📝 تفاصيل الخطأ:', error.message);
     }
 }
+
