@@ -1,3 +1,6 @@
+/*// في السطر 40 تقريباً، قد يكون الخطأ في كائن الـ viewport أو تعريف المتغيرات
+// بدلاً من ذلك، دعنا نستخدم كوداً أكثر أماناً:
+
 /*
  * Copyright 2016 Google Inc. All rights reserved.
  *
@@ -5,7 +8,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,10 +19,22 @@
 'use strict';
 
 (function() {
+  // تأكد من أن المكتبات محملة
+  if (typeof window.Marzipano === 'undefined') {
+    console.error('Marzipano library not loaded');
+    return;
+  }
+  
   var Marzipano = window.Marzipano;
   var bowser = window.bowser;
   var screenfull = window.screenfull;
   var data = window.APP_DATA;
+
+  // تأكد من وجود البيانات
+  if (!data) {
+    console.error('APP_DATA not found');
+    return;
+  }
 
   // Grab elements from DOM.
   var panoElement = document.querySelector('#pano');
@@ -30,6 +45,13 @@
   var autorotateToggleElement = document.querySelector('#autorotateToggle');
   var fullscreenToggleElement = document.querySelector('#fullscreenToggle');
 
+  // تأكد من وجود العناصر الأساسية
+  if (!panoElement) {
+    console.error('pano element not found');
+    return;
+  }
+
+  // باقي الكود يبقى كما هو...
   // Detect desktop or mobile mode.
   if (window.matchMedia) {
     var setMode = function() {
@@ -40,6 +62,13 @@
         document.body.classList.remove('mobile');
         document.body.classList.add('desktop');
       }
+    };
+    var mql = matchMedia("(max-width: 500px), (max-height: 500px)");
+    setMode();
+    mql.addListener(setMode);
+  } else {
+    document.body.classList.add('desktop');
+  }
     };
     var mql = matchMedia("(max-width: 500px), (max-height: 500px)");
     setMode();
