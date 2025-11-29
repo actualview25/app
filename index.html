@@ -13,31 +13,42 @@
     }
 
     .sofa-box {
-        width: 450px;
-        height: 300px;
+        width: 700px;
+        height: 450px;
         margin: 20px auto;
         position: relative;
+        overflow: hidden;
+        border-radius: 20px;
     }
 
     .sofa-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 20px;
         display: block;
+        filter: brightness(1.03) contrast(1.05);
     }
 
-    /* طبقة اللون التي تتغير فقط */
+    /* طبقة التلوين */
     .color-layer {
         position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        border-radius: 20px;
+        inset: 0;
         background: transparent;
-        mix-blend-mode: multiply;   /* يطبق اللون على الصورة */
-        opacity: 0.8;
+        mix-blend-mode: multiply;
+        opacity: 0.75;
         pointer-events: none;
-        transition: 0.3s;
+        transition: 0.3s ease;
+    }
+
+    /* طبقة تفتيح بسيطة ليظهر التلوين على الأبيض */
+    .light-layer {
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.25);
+        mix-blend-mode: screen;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s ease;
     }
 
     .colors {
@@ -64,6 +75,7 @@
 <div class="sofa-box">
     <img src="sofa.jpg" class="sofa-img" alt="sofa">
     <div id="layer" class="color-layer"></div>
+    <div id="light" class="light-layer"></div>
 </div>
 
 <div class="colors">
@@ -76,12 +88,15 @@
 
 <script>
     const layer = document.getElementById("layer");
+    const light = document.getElementById("light");
     const buttons = document.querySelectorAll(".color-btn");
 
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const color = btn.getAttribute("data-color");
-            layer.style.backgroundColor = color;  // ← يطبق اللون على الصورة فقط
+
+            layer.style.backgroundColor = color;
+            light.style.opacity = 1; // لتوضيح اللون على الأبيض
         });
     });
 </script>
