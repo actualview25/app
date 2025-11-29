@@ -43,7 +43,7 @@ function initializeMarzipano() {
 
         console.log('🖼️ تحميل المشهد:', sceneData.name);
 
-        // 3. مصدر الصور - بطريقة أبسط
+        // 3. مصدر الصور - مع معالجة الأخطاء
         var source = Marzipano.ImageUrlSource.fromString(
             "tiles/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg"
         );
@@ -51,7 +51,7 @@ function initializeMarzipano() {
         // 4. الهندسة
         var geometry = new Marzipano.CubeGeometry(sceneData.levels);
 
-        // 5. المنظور - بدون limiter معقد
+        // 5. المنظور
         var view = new Marzipano.RectilinearView(sceneData.initialViewParameters);
 
         // 6. إنشاء المشهد
@@ -70,8 +70,6 @@ function initializeMarzipano() {
         console.log('🌐 Viewer جاهز لنظام الأثاث');
 
     } catch (error) {
-        console.error('💥 خطأ فادح:', error);
-        console.error('📝 تفاصيل الخطأ:', error.message);
+        console.error('💥 خطأ في التهيئة:', error);
     }
 }
-
