@@ -2,18 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <title>جولة افتراضية - نظام ألوان الأثاث</title>
-    <style> @-ms-viewport { width: device-width; } </style>
+    <style>
+        @-ms-viewport { width: device-width; }
+        /* إضافة قاعدة لضمان عرض سليم */
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+    </style>
     <link rel="stylesheet" href="vendor/reset.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="single-scene view-control-buttons">
 
 <!-- المشهد الرئيسي للجولة الافتراضية -->
-<div id="pano"></div>
+<div id="pano" style="width:100%; height:100%; position:absolute;"></div>
 
-<!-- قائمة المشاهد -->
+<!-- باقي الكود يبقى كما هو -->
 <div id="sceneList">
   <ul class="scenes">
       <a href="javascript:void(0)" class="scene" data-id="0-prifit_reception">
@@ -63,7 +67,7 @@
   <img class="icon" src="img/minus.png">
 </a>
 
-<!-- لوحة تحكم الأثاث (النظام الذي بنيته) -->
+<!-- لوحة تحكم الأثاث -->
 <div id="furniture-control-panel">
     <div class="control-header">
         <h3>🎨 ألوان الأثاث</h3>
