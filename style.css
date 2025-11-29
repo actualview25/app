@@ -153,3 +153,156 @@
     background: rgba(76, 175, 80, 1);
 }
 
+/* إصلاحات أساسية */
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+#pano {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #000; /* خلفية سوداء مؤقتة */
+}
+
+/* لوحة التحكم */
+#furniture-control-panel {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #4ECDC4;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    min-width: 200px;
+    transition: all 0.3s ease;
+}
+
+/* إصلاح حالة الطي */
+#furniture-control-panel.collapsed {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    padding: 10px;
+}
+
+#furniture-control-panel.collapsed .control-header h3,
+#furniture-control-panel.collapsed .color-palette,
+#furniture-control-panel.collapsed .control-actions {
+    display: none;
+}
+
+.control-header h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.color-btn.active {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5px #4ECDC4;
+}
+
+.control-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 10px;
+    background: rgba(103, 115, 131, 0.8);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    text-align: center;
+}
+
+.action-btn:hover {
+    background: rgba(78, 88, 104, 0.9);
+    transform: translateY(-2px);
+}
+
+/* هوت سبوتات الأثاث */
+.furniture-hotspot {
+    width: 50px;
+    height: 50px;
+    background: rgba(76, 175, 80, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    border: 2px solid white;
+    transition: all 0.3s ease;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    animation: pulse 2s infinite;
+    z-index: 1000;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+.furniture-hotspot:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    background: rgba(76, 175, 80, 1);
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+    #furniture-control-panel {
+        right: 10px;
+        width: 180px;
+    }
+}
