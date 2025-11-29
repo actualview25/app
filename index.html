@@ -70,6 +70,24 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        /* ---- mask overlay for sofas ---- */
+.furniture-mask {
+  position: absolute;
+  pointer-events: auto;
+  border-radius: 8px;
+  mix-blend-mode: multiply;
+  opacity: 0.45;
+  z-index: 900; /* فوق البانوراما، تحت لوحة التحكم */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  transition: background-color 200ms ease, opacity 200ms ease, transform 200ms ease;
+}
+
+/* في حال أردت تفعيل تحريك الماسك أثناء الاختبار */
+.furniture-mask.debug {
+  outline: 2px dashed rgba(255,255,255,0.4);
+}
+
     </style>
 </head>
 <body>
