@@ -1,233 +1,184 @@
-// نظام الأثاث - ملف JavaScript منفصل
-console.log('🚀 بدء تحميل نظام الأثاث...');
+console.log('🎨 نظام الأثاث يعمل!');
 
-let initializationAttempts = 0;
-const MAX_ATTEMPTS = 10;
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 بدء نظام الأثاث...');
+    initFurnitureSystem();
+});
 
-function initSystem() {
-    initializationAttempts++;
-    console.log(`🔧 بدء تهيئة النظام (المحاولة ${initializationAttempts})...`);
+function initFurnitureSystem() {
+    console.log('🔧 تهيئة النظام...');
     
-    // منع الحلقة اللانهائية
-    if (initializationAttempts > MAX_ATTEMPTS) {
-        console.error('❌ فشل في تحميل النظام بعد عدة محاولات');
-        showMessage('❌ فشل في تحميل النظام - تأكد من تحميل الجولة');
-        return;
-    }
-
-    // الانتظار حتى تكون الجولة جاهزة
-    if (typeof window.viewer !== 'undefined' && window.viewer) {
-        console.log('✅ الجولة جاهزة - تهيئة النظام');
-        initColorSystem();
-        createFurnitureHotspots();
-        showMessage('✅ النظام جاهز! يمكنك تغيير ألوان الأثاث');
-    } else {
-        console.log('⏳ في انتظار تحميل الجولة...');
-        setTimeout(initSystem, 1000);
-    }
-}
-
-function initColorSystem() {
-    console.log('🎨 تهيئة نظام الألوان...');
-   
+    // نظام الألوان
     const colorButtons = document.querySelectorAll('.color-btn');
     const resetButton = document.getElementById('reset-colors');
     const toggleButton = document.getElementById('toggle-panel');
-   
-    console.log('🎯 عدد أزرار الألوان:', colorButtons.length);
 
-    if (colorButtons.length === 0) {
-        console.error('❌ لم يتم العثور على أزرار الألوان!');
-        return;
-    }
-
-    // أحداث أزرار الألوان
+    // أحداث الألوان
     colorButtons.forEach(button => {
         button.addEventListener('click', function() {
             const color = this.getAttribute('data-color');
-            console.log('🎨 تطبيق اللون:', color);
             applyFurnitureColor(color);
-           
+            
+            // تحديث النشط
             colorButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
+            
+            showMessage(`تم تطبيق اللون: ${getColorName(color)}`);
         });
     });
-   
-    // زر إعادة التعيين
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            console.log('🔄 إعادة تعيين الألوان');
-            resetFurnitureColors();
-            colorButtons.forEach(btn => btn.classList.remove('active'));
-            const defaultBtn = document.querySelector('[data-color="default"]');
-            if (defaultBtn) defaultBtn.classList.add('active');
-        });
-    }
-   
-    // زر إظهار/إخفاء اللوحة
-    if (toggleButton) {
-        toggleButton.addEventListener('click', function() {
-            const controlPanel = document.getElementById('furniture-control-panel');
-            if (controlPanel) {
-                controlPanel.classList.toggle('collapsed');
-                this.textContent = controlPanel.classList.contains('collapsed') ? '📋 إظهار' : '📋 إخفاء';
-            }
-        });
-    }
-   
-    console.log('✅ نظام الألوان جاهز!');
+
+    // إعادة التعيين
+    resetButton.addEventListener('click', function() {
+        resetFurnitureColors();
+        colorButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector('[data-color="default"]').classList.add('active');
+        showMessage('تم إعادة التعيين');
+    });
+
+    // إظهار/إخفاء
+    toggleButton.addEventListener('click', function() {
+        const panel = document.getElementById('furniture-control-panel');
+        panel.classList.toggle('collapsed');
+        this.textContent = panel.classList.contains('collapsed') ? '📋 إظهار' : '📋 إخفاء';
+    });
+
+    // إنشاء قطع الأثاث
+    createFurnitureItems();
+    
+    console.log('✅ نظام الأثاث جاهز!');
 }
 
-function createFurnitureHotspots() {
-    console.log('🪑 إنشاء هوت سبوتات الأثاث...');
-   
-    // تنظيف أي هوت سبوتات قديمة
-    const oldHotspots = document.querySelectorAll('.furniture-hotspot');
-    oldHotspots.forEach(hotspot => {
-        if (hotspot.parentNode) {
-            hotspot.parentNode.removeChild(hotspot);
-        }
-    });
-   
-    // إنشاء دوائر تفاعلية
-    const hotspots = [
-        { id: 'sofa1', name: 'كنبة أمامية', x: '45%', y: '40%', icon: '🛋️' },
-        { id: 'sofa2', name: 'كنبة يمنى', x: '70%', y: '40%', icon: '🛋️' },
-        { id: 'sofa3', name: 'كنبة يسرى', x: '20%', y: '40%', icon: '🛋️' },
-        { id: 'table1', name: 'طاولة وسط', x: '45%', y: '60%', icon: '🪑' }
+function createFurnitureItems() {
+    console.log('🪑 إنشاء قطع الأثاث...');
+    
+    // تنظيف القديم
+    document.querySelectorAll('.furniture-item').forEach(item => item.remove());
+    
+    // قطع الأثاث
+    const items = [
+        { name: 'كنبة أمامية', top: '40%', left: '50%', icon: '🛋️' },
+        { name: 'طاولة وسط', top: '60%', left: '50%', icon: '🪑' },
+        { name: 'كرسي', top: '70%', left: '30%', icon: '💺' },
+        { name: 'كنبة جانبية', top: '40%', left: '20%', icon: '🛋️' },
+        { name: 'كنبة جانبية', top: '40%', left: '80%', icon: '🛋️' }
     ];
-   
-    const panoElement = document.getElementById('pano');
-    if (!panoElement) {
-        console.error('❌ لم يتم العثور على عنصر الجولة');
-        return;
-    }
 
-    hotspots.forEach(spot => {
+    items.forEach(item => {
         const element = document.createElement('div');
-        element.className = 'furniture-hotspot';
-        element.id = spot.id;
-        element.style.left = spot.x;
-        element.style.top = spot.y;
-        element.innerHTML = spot.icon;
-        element.title = spot.name;
-        element.setAttribute('data-name', spot.name);
-       
-        // إضافة للتلميح
-        const tooltip = document.createElement('div');
-        tooltip.className = 'furniture-tooltip';
-        tooltip.textContent = spot.name;
-        tooltip.style.cssText = `
+        element.className = 'furniture-item';
+        element.innerHTML = item.icon;
+        element.title = item.name;
+        element.style.cssText = `
             position: absolute;
-            top: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.9);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            z-index: 1001;
+            top: ${item.top};
+            left: ${item.left};
+            width: 60px;
+            height: 60px;
+            background: rgba(76, 175, 80, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            border: 3px solid white;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         `;
-       
-        element.appendChild(tooltip);
-       
-        // أحداث التفاعل
+
+        // تأثيرات التفاعل
         element.addEventListener('mouseenter', function() {
             this.style.transform = 'translate(-50%, -50%) scale(1.2)';
-            tooltip.style.opacity = '1';
-        });
-       
-        element.addEventListener('mouseleave', function() {
-            this.style.transform = 'translate(-50%, -50%) scale(1)';
-            tooltip.style.opacity = '0';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.4)';
         });
 
-        // حدث النقر
-        element.addEventListener('click', function() {
-            const name = this.getAttribute('data-name');
-            showMessage(`تم تحديد: ${name}`);
+        element.addEventListener('mouseleave', function() {
+            this.style.transform = 'translate(-50%, -50%) scale(1)';
+            this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
         });
-       
-        panoElement.appendChild(element);
-        console.log(`✅ تم إنشاء ${spot.name}`);
+
+        element.addEventListener('click', function() {
+            showMessage(`تم تحديد: ${item.name}`);
+        });
+
+        document.getElementById('pano').appendChild(element);
     });
-   
-    console.log(`✅ تم إنشاء ${hotspots.length} قطع أثاث تفاعلية!`);
+    
+    console.log(`✅ تم إنشاء ${items.length} قطع أثاث`);
 }
 
 function applyFurnitureColor(color) {
-    console.log('🎨 تغيير لون الأثاث إلى:', color);
-   
-    const hotspots = document.querySelectorAll('.furniture-hotspot');
-    console.log('🔍 عدد قطع الأثاث:', hotspots.length);
-   
-    if (hotspots.length === 0) {
-        showMessage('❌ لا توجد قطع أثاث لتغيير لونها');
-        return;
-    }
-
-    const colorValue = getColorValue(color);
-    hotspots.forEach(hotspot => {
-        hotspot.style.background = colorValue;
+    const items = document.querySelectorAll('.furniture-item');
+    const colorMap = {
+        'default': 'rgba(76, 175, 80, 0.9)',
+        'brown': 'rgba(160, 82, 45, 0.9)',
+        'dark-brown': 'rgba(101, 67, 33, 0.9)',
+        'black': 'rgba(47, 79, 79, 0.9)',
+        'white': 'rgba(245, 245, 220, 0.9)',
+        'gray': 'rgba(128, 128, 128, 0.9)',
+        'walnut': 'rgba(119, 63, 26, 0.9)',
+        'cherry': 'rgba(159, 29, 53, 0.9)'
+    };
+    
+    const newColor = colorMap[color] || colorMap['default'];
+    items.forEach(item => {
+        item.style.background = newColor;
     });
-   
-    showMessage(`تم تطبيق اللون ${getColorName(color)} على ${hotspots.length} قطعة أثاث`);
 }
 
 function resetFurnitureColors() {
-    const hotspots = document.querySelectorAll('.furniture-hotspot');
-    hotspots.forEach(hotspot => {
-        hotspot.style.background = 'rgba(76, 175, 80, 0.8)';
+    const items = document.querySelectorAll('.furniture-item');
+    items.forEach(item => {
+        item.style.background = 'rgba(76, 175, 80, 0.9)';
     });
-    showMessage('تم إعادة تعيين ألوان الأثاث');
-}
-
-function getColorValue(color) {
-    const colors = {
-        'default': 'rgba(76, 175, 80, 0.8)',
-        'brown': 'rgba(160, 82, 45, 0.8)',
-        'dark-brown': 'rgba(101, 67, 33, 0.8)',
-        'black': 'rgba(47, 79, 79, 0.8)',
-        'white': 'rgba(245, 245, 220, 0.8)',
-        'gray': 'rgba(128, 128, 128, 0.8)',
-        'walnut': 'rgba(119, 63, 26, 0.8)',
-        'cherry': 'rgba(159, 29, 53, 0.8)',
-        'oak': 'rgba(210, 180, 140, 0.8)',
-        'mahogany': 'rgba(192, 64, 0, 0.8)'
-    };
-    return colors[color] || colors['default'];
 }
 
 function getColorName(color) {
-    const colorNames = {
+    const names = {
         'default': 'أخضر',
         'brown': 'بني',
-        'dark-brown': 'بني غامق',
+        'dark-brown': 'بني غامق', 
         'black': 'أسود',
         'white': 'أبيض',
         'gray': 'رمادي',
         'walnut': 'جوز',
-        'cherry': 'كرزي',
-        'oak': 'بلوط',
-        'mahogany': 'ماهوجني'
+        'cherry': 'كرزي'
     };
-    return colorNames[color] || color;
+    return names[color] || color;
 }
 
-function showMessage(message) {
-    const oldMessage = document.getElementById('temp-message');
-    if (oldMessage) oldMessage.remove();
-   
-    const messageDiv = document.createElement('div');
-    messageDiv.id = 'temp-message';
-    messageDiv.textContent = message;
-    messageDiv.style.cssText = `
+function showMessage(text) {
+    // إزالة الرسائل القديمة
+    document.querySelectorAll('.furniture-message').forEach(msg => msg.remove());
+    
+    const message = document.createElement('div');
+    message.className = 'furniture-message';
+    message.textContent = text;
+    message.style.cssText = `
         position: fixed;
         top: 20px;
         left: 50%;
         transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.95);
+        color: #00ff00;
+        padding: 15px 30px;
+        border-radius: 10px;
+        border: 2px solid #00ff00;
+        z-index: 10000;
+        font-size: 16px;
+        font-weight: bold;
+        box-shadow: 0 5px 20px rgba(0,255,0,0.3);
+    `;
+    
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+        if (message.parentNode) {
+            message.parentNode.removeChild(message);
+        }
+    }, 3000);
+}
+
+console.log('🎯 نظام الأثاث محمل وجاهز!');
