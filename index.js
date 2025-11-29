@@ -14,14 +14,29 @@ if (!panoElement) return;
 try {
 var viewer = new Marzipano.Viewer(panoElement);
 
-//  الإصلاح: تحميل الصورة الحقيقية
+// استخدام CubeGeometry للصور المكعبة
 var source = Marzipano.ImageUrlSource.fromString(
-"tiles/0-prifit_reception/preview.jpg" // تأكد من المسار الصحيح
+"tiles/0-prifit_reception/{z}/{f}/{y}/{x}.jpg",
+{
+cubeMapPreviewUrl: "tiles/0-prifit_reception/preview.jpg"
+}
 );
 
-// استخدام EquirectGeometry للصورة الواحدة
-var geometry = new Marzipano.EquirectGeometry([
-{ width: 4000 } // يمكنك تعديل العرض حسب حجم صورتك
+// هندسة المكعب - تأكد من أن الصور مقسمة بشكل صحيح
+var geometry = new Marzipano.CubeGeometry([
+{
+tileSize: 256,
+size: 256,
+fallbackOnly: true
+},
+{
+tileSize: 512,
+size: 512
+},
+{
+tileSize: 512,
+size: 1024
+}
 ]);
 
 var view = new Marzipano.RectilinearView({
@@ -30,19 +45,50 @@ yaw: 0,
 fov: 1.57
 });
 
-// إنشاء وتحويل المشهد
+var scene = viewer.createScene({
+source: source,
+geometry: geometry,
+view: view,
+pinFirstLevel: true
+});
+
+scene.switchTo();
+window.viewer = viewer;
+console.log(' الجولة محملة بنجاح مع CubeGeometry!');
+
+} catch (error) {
+console.error(' خطأ في تحميل الجولة:', error);
+// جرب الطريقة البديلة إذا فشلت
+tryAlternativeMethod();
+}
+});
+
+function tryAlternativeMethod() {
+console.log(' تجربة طريقة بديلة...');
+
+var viewer = new Marzipano.Viewer(document.getElementById('pano'));
+
+// جرب استخدام preview.jpg فقط كصورة كروية
+var source = Marzipano.ImageUrlSource.fromString(
+"tiles/0-prifit_reception/preview.jpg"
+);
+
+var geometry = new Marzipano.EquirectGeometry([
+{ width: 2000 } // حجم أصغر قد يكون أفضل
+]);
+
+var view = new Marzipano.RectilinearView({
+pitch: 0,
+yaw: 0,
+fov: 1.0 // تقليل مجال الرؤية
+});
+
 var scene = viewer.createScene({
 source: source,
 geometry: geometry,
 view: view
 });
 
-scene.switchTo(); //  هذا السطر المفقود!
-
+scene.switchTo();
 window.viewer = viewer;
-console.log(' الجولة محملة بنجاح!');
-
-} catch (error) {
-console.error(' خطأ في تحميل الجولة:', error);
-}
-})
+console.log(' الجولة محملة بالطريقة البديلة!');
