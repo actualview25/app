@@ -2,7 +2,7 @@
 console.log('🚀 بدء تحميل نظام الأثاث...');
 
 let initializationAttempts = 0;
-const MAX_ATTEMPTS = 5;
+const MAX_ATTEMPTS = 10;
 
 function initSystem() {
     initializationAttempts++;
@@ -11,6 +11,7 @@ function initSystem() {
     // منع الحلقة اللانهائية
     if (initializationAttempts > MAX_ATTEMPTS) {
         console.error('❌ فشل في تحميل النظام بعد عدة محاولات');
+        showMessage('❌ فشل في تحميل النظام - تأكد من تحميل الجولة');
         return;
     }
 
@@ -19,6 +20,7 @@ function initSystem() {
         console.log('✅ الجولة جاهزة - تهيئة النظام');
         initColorSystem();
         createFurnitureHotspots();
+        showMessage('✅ النظام جاهز! يمكنك تغيير ألوان الأثاث');
     } else {
         console.log('⏳ في انتظار تحميل الجولة...');
         setTimeout(initSystem, 1000);
@@ -52,22 +54,26 @@ function initColorSystem() {
     });
    
     // زر إعادة التعيين
-    resetButton.addEventListener('click', function() {
-        console.log('🔄 إعادة تعيين الألوان');
-        resetFurnitureColors();
-        colorButtons.forEach(btn => btn.classList.remove('active'));
-        const defaultBtn = document.querySelector('[data-color="default"]');
-        if (defaultBtn) defaultBtn.classList.add('active');
-    });
+    if (resetButton) {
+        resetButton.addEventListener('click', function() {
+            console.log('🔄 إعادة تعيين الألوان');
+            resetFurnitureColors();
+            colorButtons.forEach(btn => btn.classList.remove('active'));
+            const defaultBtn = document.querySelector('[data-color="default"]');
+            if (defaultBtn) defaultBtn.classList.add('active');
+        });
+    }
    
     // زر إظهار/إخفاء اللوحة
-    toggleButton.addEventListener('click', function() {
-        const controlPanel = document.getElementById('furniture-control-panel');
-        if (controlPanel) {
-            controlPanel.classList.toggle('collapsed');
-            this.textContent = controlPanel.classList.contains('collapsed') ? '📋 إظهار' : '📋 إخفاء';
-        }
-    });
+    if (toggleButton) {
+        toggleButton.addEventListener('click', function() {
+            const controlPanel = document.getElementById('furniture-control-panel');
+            if (controlPanel) {
+                controlPanel.classList.toggle('collapsed');
+                this.textContent = controlPanel.classList.contains('collapsed') ? '📋 إظهار' : '📋 إخفاء';
+            }
+        });
+    }
    
     console.log('✅ نظام الألوان جاهز!');
 }
@@ -91,6 +97,12 @@ function createFurnitureHotspots() {
         { id: 'table1', name: 'طاولة وسط', x: '45%', y: '60%', icon: '🪑' }
     ];
    
+    const panoElement = document.getElementById('pano');
+    if (!panoElement) {
+        console.error('❌ لم يتم العثور على عنصر الجولة');
+        return;
+    }
+
     hotspots.forEach(spot => {
         const element = document.createElement('div');
         element.className = 'furniture-hotspot';
@@ -141,14 +153,8 @@ function createFurnitureHotspots() {
             showMessage(`تم تحديد: ${name}`);
         });
        
-        // إضافة إلى عنصر الجولة
-        const panoElement = document.getElementById('pano');
-        if (panoElement) {
-            panoElement.appendChild(element);
-            console.log(`✅ تم إنشاء ${spot.name}`);
-        } else {
-            console.error('❌ لم يتم العثور على عنصر الجولة');
-        }
+        panoElement.appendChild(element);
+        console.log(`✅ تم إنشاء ${spot.name}`);
     });
    
     console.log(`✅ تم إنشاء ${hotspots.length} قطع أثاث تفاعلية!`);
@@ -160,6 +166,11 @@ function applyFurnitureColor(color) {
     const hotspots = document.querySelectorAll('.furniture-hotspot');
     console.log('🔍 عدد قطع الأثاث:', hotspots.length);
    
+    if (hotspots.length === 0) {
+        showMessage('❌ لا توجد قطع أثاث لتغيير لونها');
+        return;
+    }
+
     const colorValue = getColorValue(color);
     hotspots.forEach(hotspot => {
         hotspot.style.background = colorValue;
@@ -220,29 +231,3 @@ function showMessage(message) {
         top: 20px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        padding: 15px 25px;
-        border-radius: 10px;
-        z-index: 10001;
-        font-size: 16px;
-        font-weight: bold;
-        border: 2px solid #4ECDC4;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    `;
-   
-    document.body.appendChild(messageDiv);
-   
-    setTimeout(() => {
-        if (messageDiv.parentNode) {
-            messageDiv.parentNode.removeChild(messageDiv);
-        }
-    }, 3000);
-}
-
-// بدء النظام بعد تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 الصفحة محملة - بدء النظام...');
-    setTimeout(initSystem, 2000);
-});
-
