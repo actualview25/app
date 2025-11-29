@@ -2,101 +2,41 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جولة افتراضية - نظام ألوان الأثاث</title>
-    <style>
-        @-ms-viewport { width: device-width; }
-        /* إضافة قاعدة لضمان عرض سليم */
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-    </style>
-    <link rel="stylesheet" href="vendor/reset.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="single-scene view-control-buttons">
+<body>
+    <!-- المشهد الرئيسي -->
+    <div id="pano"></div>
 
-<!-- المشهد الرئيسي للجولة الافتراضية -->
-<div id="pano" style="width:100%; height:100%; position:absolute;"></div>
-
-<!-- باقي الكود يبقى كما هو -->
-<div id="sceneList">
-  <ul class="scenes">
-      <a href="javascript:void(0)" class="scene" data-id="0-prifit_reception">
-        <li class="text">PRiFit_reception</li>
-      </a>
-  </ul>
-</div>
-
-<!-- شريط العنوان -->
-<div id="titleBar">
-  <h1 class="sceneName"></h1>
-</div>
-
-<!-- عناصر التحكم في الجولة -->
-<a href="javascript:void(0)" id="autorotateToggle">
-  <img class="icon off" src="img/play.png">
-  <img class="icon on" src="img/pause.png">
-</a>
-
-<a href="javascript:void(0)" id="fullscreenToggle">
-  <img class="icon off" src="img/fullscreen.png">
-  <img class="icon on" src="img/windowed.png">
-</a>
-
-<a href="javascript:void(0)" id="sceneListToggle">
-  <img class="icon off" src="img/expand.png">
-  <img class="icon on" src="img/collapse.png">
-</a>
-
-<!-- أزرار التحكم في المنظور -->
-<a href="javascript:void(0)" id="viewUp" class="viewControlButton viewControlButton-1">
-  <img class="icon" src="img/up.png">
-</a>
-<a href="javascript:void(0)" id="viewDown" class="viewControlButton viewControlButton-2">
-  <img class="icon" src="img/down.png">
-</a>
-<a href="javascript:void(0)" id="viewLeft" class="viewControlButton viewControlButton-3">
-  <img class="icon" src="img/left.png">
-</a>
-<a href="javascript:void(0)" id="viewRight" class="viewControlButton viewControlButton-4">
-  <img class="icon" src="img/right.png">
-</a>
-<a href="javascript:void(0)" id="viewIn" class="viewControlButton viewControlButton-5">
-  <img class="icon" src="img/plus.png">
-</a>
-<a href="javascript:void(0)" id="viewOut" class="viewControlButton viewControlButton-6">
-  <img class="icon" src="img/minus.png">
-</a>
-
-<!-- لوحة تحكم الأثاث -->
-<div id="furniture-control-panel">
-    <div class="control-header">
-        <h3>🎨 ألوان الأثاث</h3>
+    <!-- لوحة التحكم -->
+    <div id="furniture-control-panel">
+        <div class="control-header">
+            <h3>🎨 ألوان الأثاث</h3>
+        </div>
+        <div class="color-palette">
+            <button class="color-btn active" data-color="default" style="background: #8B4513" title="اللون الأساسي">🪑</button>
+            <button class="color-btn" data-color="brown" style="background: #A0522D" title="بني"></button>
+            <button class="color-btn" data-color="dark-brown" style="background: #654321" title="بني غامق"></button>
+            <button class="color-btn" data-color="black" style="background: #2F4F4F" title="أسود"></button>
+            <button class="color-btn" data-color="white" style="background: #F5F5DC" title="أبيض"></button>
+            <button class="color-btn" data-color="gray" style="background: #808080" title="رمادي"></button>
+        </div>
+        <div class="control-actions">
+            <button id="reset-colors" class="action-btn">🔄 إعادة تعيين</button>
+            <button id="toggle-panel" class="action-btn">📋 إخفاء</button>
+        </div>
     </div>
-    <div class="color-palette">
-        <button class="color-btn active" data-color="default" style="background: #8B4513" title="اللون الأساسي">🪑</button>
-        <button class="color-btn" data-color="brown" style="background: #A0522D" title="بني"></button>
-        <button class="color-btn" data-color="dark-brown" style="background: #654321" title="بني غامق"></button>
-        <button class="color-btn" data-color="black" style="background: #2F4F4F" title="أسود"></button>
-        <button class="color-btn" data-color="white" style="background: #F5F5DC" title="أبيض"></button>
-        <button class="color-btn" data-color="gray" style="background: #808080" title="رمادي"></button>
-        <button class="color-btn" data-color="walnut" style="background: #773F1A" title="جوز"></button>
-        <button class="color-btn" data-color="cherry" style="background: #9F1D35" title="كرزي"></button>
-        <button class="color-btn" data-color="oak" style="background: #D2B48C" title="بلوط"></button>
-        <button class="color-btn" data-color="mahogany" style="background: #C04000" title="ماهوجني"></button>
-    </div>
-    <div class="control-actions">
-        <button id="reset-colors" class="action-btn">🔄 إعادة تعيين</button>
-        <button id="toggle-panel" class="action-btn">📋 إخفاء</button>
-    </div>
-</div>
 
-<script src="vendor/screenfull.min.js"></script>
-<script src="vendor/bowser.min.js"></script>
-<script src="vendor/marzipano.js"></script>
+    <!-- المكتبات -->
+    <script src="vendor/screenfull.min.js"></script>
+    <script src="vendor/bowser.min.js"></script>
+    <script src="vendor/marzipano.js"></script>
 
-<script src="data.js"></script>
-<script src="index.js"></script>
-<script src="app.js"></script>
-
+    <!-- ملفاتنا -->
+    <script src="data.js"></script>
+    <script src="index.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
