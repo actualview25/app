@@ -1,217 +1,98 @@
-console.log('🚀 بدء تحميل الجولة...');
+console.log("🚀 بدء تشغيل الجولة مع نظام تغيير لون الكنب");
 
-window.addEventListener('load', function () {
-    console.log('📄 الصفحة جاهزة');
+// -------------------------
+// 1) تحميل Marzipano
+// -------------------------
+window.addEventListener("load", function () {
 
-    if (typeof Marzipano === 'undefined') {
-        console.error('Marzipano غير محمل');
-        return;
-    }
-
-    var panoElement = document.getElementById('pano');
-    if (!panoElement) {
-        console.error('عنصر pano غير موجود');
-        return;
-    }
-
-    try {
-        var viewer = new Marzipano.Viewer(panoElement);
-        console.log('✅ Viewer تم إنشاؤه');
-
-        loadSceneFromData(viewer);
-
-    } catch (error) {
-        console.error('💥 خطأ في تحميل الجولة:', error);
-    }
-});
-
-
-// =============================
-// تحميل المشهد من data.js
-// =============================
-function loadSceneFromData(viewer) {
-    if (typeof APP_DATA === 'undefined' || !APP_DATA.scenes || APP_DATA.scenes.length === 0) {
-        console.error('❌ لا توجد بيانات للمشاهد');
-        loadDefaultScene(viewer);
-        return;
-    }
+    var pano = document.getElementById("pano");
+    var viewer = new Marzipano.Viewer(pano);
 
     var sceneData = APP_DATA.scenes[0];
-    console.log('🖼️ تحميل المشهد:', sceneData.name);
 
-    let scene;
+    var source = Marzipano.ImageUrlSource.fromString(
+        "tiles/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg"
+    );
 
-    try {
-        var source = Marzipano.ImageUrlSource.fromString(
-            "tiles/" + sceneData.id + "/{z}/{f}/{y}/{x}.jpg",
-            { cubeMapPreviewUrl: "tiles/" + sceneData.id + "/preview.jpg" }
-        );
+    var geometry = new Marzipano.CubeGeometry(sceneData.levels);
 
-        var geometry = new Marzipano.CubeGeometry(sceneData.levels);
+    var limiter = Marzipano.RectilinearView.limit.traditional(
+        sceneData.faceSize,
+        120 * Math.PI / 180,
+        120 * Math.PI / 180
+    );
 
-        var limiter = Marzipano.RectilinearView.limit.traditional(
-            sceneData.faceSize,
-            100 * Math.PI / 180,
-            120 * Math.PI / 180
-        );
+    var view = new Marzipano.RectilinearView(
+        sceneData.initialViewParameters,
+        limiter
+    );
 
-        var view = new Marzipano.RectilinearView(sceneData.initialViewParameters, limiter);
+    var scene = viewer.createScene({
+        source: source,
+        geometry: geometry,
+        view: view,
+    });
 
-        scene = viewer.createScene({
-            source: source,
-            geometry: geometry,
-            view: view,
-            pinFirstLevel: true
-        });
-
-        scene.switchTo();
-        console.log('✅ المشهد محمل بنجاح!');
-
-    } catch (cubeError) {
-        console.log('⚠️ فشل المكعب — تشغيل الوضع البديل');
-        return loadEquirectScene(viewer, sceneData);
-    }
+    scene.switchTo();
 
     window.viewer = viewer;
     window.scene = scene;
 
-    initSofaMasks();   // ← تشغيل ماسكات الكنب
-    initFurnitureUI(); // ← تشغيل نظام الألوان
-}
+    console.log("✅ تم تحميل المشهد بنجاح");
+
+    // إنشاء الماسك فوق الكنب
+    createSofaMask();
+    bindColorButtons();
+});
 
 
-// =============================
-// تحميل بديل (Equirect)
-// =============================
-function loadEquirectScene(viewer, sceneData) {
-    try {
-        var source = Marzipano.ImageUrlSource.fromString(
-            "tiles/" + sceneData.id + "/preview.jpg"
-        );
+// -----------------------------------------------------
+// 2) إنشاء ماسك الكنب — بدون إحداثيات دقيقة (تخميني)
+// -----------------------------------------------------
+let sofaMask = null;
 
-        var geometry = new Marzipano.EquirectGeometry([{ width: 2000 }]);
-        var view = new Marzipano.RectilinearView(sceneData.initialViewParameters);
+function createSofaMask() {
 
-        var scene = viewer.createScene({ source, geometry, view });
+    // div للماسك
+    sofaMask = document.createElement("div");
+    sofaMask.className = "sofa-mask";
 
-        scene.switchTo();
-        console.log('📷 وضع Equirect يعمل الآن');
+    // أسلوب الماسك (لون افتراضي شفاف)
+    sofaMask.style.width = "900px";
+    sofaMask.style.height = "520px";
+    sofaMask.style.background = "rgba(255,255,255,0.25)";
+    sofaMask.style.borderRadius = "20px";
 
-        window.viewer = viewer;
-        window.scene = scene;
-
-        initSofaMasks();
-        initFurnitureUI();
-
-    } catch (err) {
-        console.error('❌ فشل تحميل الوضع البديل');
-    }
-}
-
-
-// =============================
-//  ماسكات الكنب (تخمينية دقيقة)
-// =============================
-window.sofaMasks = [];
-
-function createMask(scene, yaw, pitch, width, height, id) {
-    const el = document.createElement('div');
-    el.className = 'furniture-mask';
-    el.id = id;
-
-    el.style.width = width + 'px';
-    el.style.height = height + 'px';
-    el.style.background = 'rgba(255,255,255,0.35)';
-    el.style.borderRadius = '12px';
-    el.style.position = 'absolute';
-    el.style.pointerEvents = 'none';
-    el.style.zIndex = 5;
-
-    // خاصية تغيير اللون
-    el.setColor = function (c) {
-        el.style.background = c;
-    };
-
-    scene.hotspotContainer().createHotspot(el, { yaw, pitch });
-
-    return el;
-}
-
-function initSofaMasks() {
-    // إزالة القديم
-    sofaMasks.forEach(m => m.remove && m.remove());
-    sofaMasks = [];
-
-    // 🎯 القيم التخمينية للكنب
-    sofaMasks.push(createMask(window.scene, -0.38, -0.10, 420, 240, 'sofa-left'));
-    sofaMasks.push(createMask(window.scene,  0.00, -0.12, 520, 300, 'sofa-center'));
-    sofaMasks.push(createMask(window.scene,  0.40, -0.10, 420, 240, 'sofa-right'));
-
-    console.log('🎉 تم إنشاء ماسكات الكنب (تخميني)');
-}
-
-
-// =============================
-//  نظام تغيير الألوان
-// =============================
-function colorToRgba(key) {
-    const map = {
-        'default':    'rgba(139,69,19,0.45)',
-        'brown':      'rgba(160,82,45,0.45)',
-        'dark-brown': 'rgba(101,67,33,0.45)',
-        'black':      'rgba(0,0,0,0.45)',
-        'white':      'rgba(255,255,255,0.45)',
-        'gray':       'rgba(128,128,128,0.45)'
-    };
-    return map[key] || map['default'];
-}
-
-function changeSofaColorByKey(key) {
-    const c = colorToRgba(key);
-    sofaMasks.forEach(m => m.setColor(c));
-}
-
-function resetSofaColors() {
-    changeSofaColorByKey('default');
-}
-
-
-// =============================
-//  ربط الأزرار مع الألوان
-// =============================
-function bindColorButtons() {
-    const colorButtons = document.querySelectorAll('.color-btn');
-    const resetButton  = document.getElementById('reset-colors');
-    const toggleButton = document.getElementById('toggle-panel');
-
-    colorButtons.forEach(btn => {
-        btn.addEventListener('click', function () {
-            const color = this.getAttribute('data-color');
-            changeSofaColorByKey(color);
-
-            colorButtons.forEach(x => x.classList.remove('active'));
-            this.classList.add('active');
-        });
+    // وضع الماسك في وسط الكنب تقريبياً
+    var hotspot = scene.hotspotContainer().createHotspot(sofaMask, {
+        yaw: 0,       // الكنب تقريباً في المنتصف
+        pitch: 0.08   // منخفض قليلاً للأرض
     });
 
-    if (resetButton) {
-        resetButton.addEventListener('click', function () {
-            resetSofaColors();
-            colorButtons.forEach(x => x.classList.remove('active'));
-        });
-    }
-
-    if (toggleButton) {
-        toggleButton.addEventListener('click', function () {
-            const panel = document.getElementById('furniture-control-panel');
-            panel.classList.toggle('collapsed');
-        });
-    }
+    console.log("🎯 تم إضافة ماسك الكنب");
 }
 
-function initFurnitureUI() {
-    bindColorButtons();
-    changeSofaColorByKey('default');
+
+// -----------------------------------------------------
+// 3) تغيير اللون
+// -----------------------------------------------------
+function changeSofaColor(hexColor) {
+    if (!sofaMask) return;
+    sofaMask.style.background = hexColor;
 }
 
+
+// -----------------------------------------------------
+// 4) ربط أزرار التحكم
+// -----------------------------------------------------
+function bindColorButtons() {
+    const btns = document.querySelectorAll(".color-btn");
+
+    btns.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const color = this.getAttribute("data-color");
+            changeSofaColor(color);
+        });
+    });
+}
 
