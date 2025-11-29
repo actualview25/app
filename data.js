@@ -1,4 +1,4 @@
-var APP_DATA = {
+window.APP_DATA = {
   "scenes": [
     {
       "id": "0-prifit_reception",
@@ -33,8 +33,8 @@ var APP_DATA = {
         {
           "yaw": 0.384894776755317,
           "pitch": -0.13116248945829945,
-          "title": "<font dir=\"auto\" style=\"vertical-align: inherit;\"><font dir=\"auto\" style=\"vertical-align: inherit;\">جlic&nbsp;</font></font>",
-          "text": "<font dir=\"auto\" style=\"vertical-align: inherit;\"><font dir=\"auto\" style=\"vertical-align: inherit;\">rr</font></font>"
+          "title": "جليك",
+          "text": "rr"
         },
         {
           "yaw": 0.7917131110213589,
