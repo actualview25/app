@@ -1,16 +1,27 @@
 // نظام الأثاث - ملف JavaScript منفصل
 console.log('🚀 بدء تحميل نظام الأثاث...');
 
+let initializationAttempts = 0;
+const MAX_ATTEMPTS = 5;
+
 function initSystem() {
-    console.log('🔧 بدء تهيئة النظام...');
+    initializationAttempts++;
+    console.log(`🔧 بدء تهيئة النظام (المحاولة ${initializationAttempts})...`);
     
+    // منع الحلقة اللانهائية
+    if (initializationAttempts > MAX_ATTEMPTS) {
+        console.error('❌ فشل في تحميل النظام بعد عدة محاولات');
+        return;
+    }
+
     // الانتظار حتى تكون الجولة جاهزة
-    if (typeof window.viewer !== 'undefined') {
+    if (typeof window.viewer !== 'undefined' && window.viewer) {
+        console.log('✅ الجولة جاهزة - تهيئة النظام');
         initColorSystem();
         createFurnitureHotspots();
     } else {
         console.log('⏳ في انتظار تحميل الجولة...');
-        setTimeout(initSystem, 500);
+        setTimeout(initSystem, 1000);
     }
 }
 
@@ -61,7 +72,6 @@ function initColorSystem() {
     console.log('✅ نظام الألوان جاهز!');
 }
 
-// باقي الدوال تبقى كما هي...
 function createFurnitureHotspots() {
     console.log('🪑 إنشاء هوت سبوتات الأثاث...');
    
@@ -73,14 +83,12 @@ function createFurnitureHotspots() {
         }
     });
    
-    // إنشاء دوائر تفاعلية في المواقع المناسبة للجولة
+    // إنشاء دوائر تفاعلية
     const hotspots = [
         { id: 'sofa1', name: 'كنبة أمامية', x: '45%', y: '40%', icon: '🛋️' },
         { id: 'sofa2', name: 'كنبة يمنى', x: '70%', y: '40%', icon: '🛋️' },
         { id: 'sofa3', name: 'كنبة يسرى', x: '20%', y: '40%', icon: '🛋️' },
-        { id: 'table1', name: 'طاولة وسط', x: '45%', y: '60%', icon: '🪑' },
-        { id: 'cushion1', name: 'وسادة', x: '35%', y: '70%', icon: '🛏️' },
-        { id: 'cushion2', name: 'وسادة', x: '55%', y: '70%', icon: '🛏️' }
+        { id: 'table1', name: 'طاولة وسط', x: '45%', y: '60%', icon: '🪑' }
     ];
    
     hotspots.forEach(spot => {
@@ -146,7 +154,6 @@ function createFurnitureHotspots() {
     console.log(`✅ تم إنشاء ${hotspots.length} قطع أثاث تفاعلية!`);
 }
 
-// باقي الدوال تبقى كما هي في كودك الأصلي...
 function applyFurnitureColor(color) {
     console.log('🎨 تغيير لون الأثاث إلى:', color);
    
@@ -236,5 +243,6 @@ function showMessage(message) {
 // بدء النظام بعد تحميل الصفحة
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📄 الصفحة محملة - بدء النظام...');
-    setTimeout(initSystem, 1000);
+    setTimeout(initSystem, 2000);
 });
+
