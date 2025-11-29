@@ -306,3 +306,7 @@ body, html {
         width: 180px;
     }
 }
+.sofa-mask {
+    transition: background 0.3s;
+    pointer-events: none;   /* حتى لا يمنع اللمس */
+}
