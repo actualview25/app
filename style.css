@@ -1,13 +1,87 @@
-/* أنماط محسنة لنظام الأثاث */
+#furniture-control-panel.collapsed {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+}
+
+#furniture-control-panel.collapsed .control-header h3,
+#furniture-control-panel.collapsed .color-palette,
+#furniture-control-panel.collapsed .control-actions {
+    display: none;
+}
+
+.control-header h3 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.color-palette {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.color-btn.active {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 5px #4ECDC4;
+}
+
+.control-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.action-btn {
+    padding: 10px;
+    background: rgba(103, 115, 131, 0.8);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    text-align: center;
+}
+
+.action-btn:hover {
+    background: rgba(78, 88, 104, 0.9);
+    transform: translateY(-2px);
+}
+
+/* هوت سبوتات الأثاث */
 .furniture-hotspot {
-    width: 70px;
-    height: 70px;
-    background: rgba(139, 69, 19, 0.9);
+    width: 60px;
+    height: 60px;
+    background: rgba(76, 175, 80, 0.8);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     border: 3px solid white;
     transition: all 0.3s ease;
@@ -15,255 +89,67 @@
     transform: translate(-50%, -50%);
     animation: pulse 2s infinite;
     z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.furniture-hotspot:hover {
-    transform: translate(-50%, -50%) scale(1.2);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
-}
-
-.furniture-tooltip {
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    z-index: 1001;
-    font-weight: bold;
 }
 
 @keyframes pulse {
-    0% { 
-        box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.7);
-    }
-    70% { 
-        box-shadow: 0 0 0 20px rgba(139, 69, 19, 0);
-    }
-    100% { 
-        box-shadow: 0 0 0 0 rgba(139, 69, 19, 0);
-    }
-}
-
-/* تأثيرات خاصة لأنواع الأثاث المختلفة */
-.furniture-hotspot[data-furniture-type="sofa"] {
-    background: rgba(160, 82, 45, 0.9);
-}
-
-.furniture-hotspot[data-furniture-type="table"] {
-    background: rgba(101, 67, 33, 0.9);
-}
-
-.furniture-hotspot[data-furniture-type="chair"] {
-    background: rgba(160, 82, 45, 0.9);
-}
-
-/* لوحة التحكم المحسنة */
-#furniture-control-panel {
-    position: fixed;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    background: rgba(58, 68, 84, 0.98);
-    border-radius: 15px;
-    padding: 20px;
-    width: 220px;
-    z-index: 10000;
-    box-shadow: 0 8px 35px rgba(0, 0, 0, 0.4);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
-}
-
-.control-header h3 {
-    margin: 0 0 20px 0;
-    text-align: center;
-    font-size: 18px;
-    color: #fff;
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.color-palette {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.color-btn {
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-.color-btn:hover {
-    transform: scale(1.15);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.color-btn.active {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 3px #fff, 0 0 0 5px #4ECDC4;
-    animation: colorPulse 2s infinite;
-}
-
-@keyframes colorPulse {
-    0% { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #4ECDC4; }
-    50% { box-shadow: 0 0 0 3px #fff, 0 0 0 7px #4ECDC4; }
-    100% { box-shadow: 0 0 0 3px #fff, 0 0 0 5px #4ECDC4; }
-}
-
-.control-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.action-btn {
-    padding: 12px;
-    background: rgba(103, 115, 131, 0.9);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    text-align: center;
-    font-weight: bold;
-}
-
-.action-btn:hover {
-    background: rgba(78, 88, 104, 1);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.furniture-item {
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.7); }
-    70% { box-shadow: 0 0 0 15px rgba(139, 69, 19, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(139, 69, 19, 0); }
-}
-
-#furniture-control-panel {
-    position: fixed;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    background: rgba(58, 68, 84, 0.95);
-    border-radius: 15px;
-    padding: 15px;
-    width: 200px;
-    z-index: 10000;
-}
-
-.color-btn.active {
-    transform: scale(1.15);
-    box-shadow: 0 0 0 3px #fff;
-}
-* أنماط نظام الأثاث البسيط */
-.furniture-item {
-    animation: gentlePulse 3s infinite ease-in-out;
-}
-
-@keyframes gentlePulse {
-    0%, 100% { 
-        box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.4);
-    }
-    50% { 
-        box-shadow: 0 0 0 10px rgba(139, 69, 19, 0);
-    }
-}
-
-@keyframes colorChange {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.1); }
-    100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-/* لوحة التحكم */
-#furniture-control-panel {
-    position: fixed;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    background: rgba(58, 68, 84, 0.95);
-    border-radius: 12px;
-    padding: 15px;
-    width: 180px;
-    z-index: 10000;
-    border: 1px solid rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-}
-
-.color-btn.active {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 2px #fff, 0 0 0 4px #4CAF50 !important;
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { box-shadow: 0 0 0 15px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
 }
 
 /* تصميم متجاوب */
 @media (max-width: 768px) {
     #furniture-control-panel {
         right: 10px;
-        width: 160px;
-        padding: 12px;
-    }
-    
-    .furniture-item {
-        width: 50px;
-        height: 50px;
-        font-size: 18px;
+        width: 180px;
     }
 }
-/* تحسينات إضافية */
-.furniture-item {
+* إضافة هذه الأنماط لتحسين العرض */
+#pano {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+#furniture-control-panel {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid #4ECDC4;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    min-width: 200px;
+    transition: all 0.3s ease;
+}
+
+/* تحسينات للهوت سبوتات */
+.furniture-hotspot {
+    width: 50px;
+    height: 50px;
+    background: rgba(76, 175, 80, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid white;
+    transition: all 0.3s ease;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    animation: pulse 2s infinite;
+    z-index: 1000;
 }
 
-.furniture-item:hover {
-    filter: brightness(1.2);
-    transform: translate(-50%, -50%) scale(1.15);
+.furniture-hotspot:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    background: rgba(76, 175, 80, 1);
 }
 
-.color-btn {
-    transition: all 0.2s ease;
-}
-
-.color-btn:hover {
-    transform: scale(1.05);
-}
-
-.temp-message {
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-}
